@@ -1,0 +1,28 @@
+# docker compose file for local microservice setup
+services:
+  dotnetmicroservice:
+    build:
+      context: ./dotnetmicroservice1/src
+      dockerfile: Dockerfile
+    networks:
+      - loadbalancer_network
+
+  golangmicroservice:
+    build:
+      context: ./golangmicroservice2
+      dockerfile: Dockerfile
+    networks:
+      - loadbalancer_network
+
+  loadbalancer:
+    image: nginx:latest
+    ports:
+      - "5005:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - loadbalancer_network
+
+networks:
+  loadbalancer_network:
+    driver: bridge
