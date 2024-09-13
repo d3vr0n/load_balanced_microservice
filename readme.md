@@ -4,7 +4,7 @@ This project consists of two microservices, one written in .NET and the other in
 
 ## Project Structure
 ```
-└── 📁test-bluebeam
+└── 📁load_balanced_microservice
     └── 📁.vscode
         └── launch.json
     └── 📁dotnetmicroservice1
