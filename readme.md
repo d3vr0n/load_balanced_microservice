@@ -19,6 +19,7 @@ This project consists of two microservices, one written in .NET and the other in
     └── 📁golangmicroservice2
         └── Dockerfile
         └── go.mod
+        └── go.sum
         └── main.go
     └── docker-compose.yml
     └── nginx.conf
@@ -31,7 +32,7 @@ This project consists of two microservices, one written in .NET and the other in
     var intersection1 = request.Array1.Intersect(request.Array2).ToArray();
 
     // deconstruct Intersect method to show how it works
-    var set1 = new HashSet<int>(request.Array1); // creatinon of HashSet is O(n)
+    var set1 = new HashSet<int>(request.Array1); // creation of HashSet is O(n)
     var intersection2 = new HashSet<int>();
     foreach (var item in request.Array2)
     {
@@ -86,8 +87,8 @@ The .NET microservice is located in the [`dotnetmicroservice1`](.\dotnetmicroser
 To build and run the .NET microservice, use the following commands:
 
 ```sh
-cd dotnetmicroservice1/dotnetmicroservice1
-dotnet build
+cd dotnetmicroservice1/src
+dotnet build --interactive
 dotnet run
 ```
 Or click on VS code debugging
@@ -105,9 +106,10 @@ payload -
 
 Alternatively to run dotnet microservice in docker - 
 ```sh
+cd dotnetmicroservice1/src
 docker build -t dotnetmicroservice1 .
 docker run -d -p 5000:8080 --name dotnetmicroservice1 dotnetmicroservice1
-curl -X POST -H "Content-Type: application/json" -d '{"array1": [1, 2, 3, 4], "array2": [3, 4, 5, 6]}' http://localhost:8080/intersection
+curl -X POST -H "Content-Type: application/json" -d '{"array1": [1, 2, 3, 4], "array2": [3, 4, 5, 6]}' http://localhost:5000/intersection
 
 ```
 ### Go Microservice
@@ -134,7 +136,7 @@ Alternatively to run go microservice in docker -
 ```sh
 docker build -t intersection-app .
 docker run -p 8080:8081 intersection-app
-curl -X POST -H "Content-Type: application/json" -d '{"array1": [1, 2, 3, 4], "array2": [3, 4, 5, 6]}' http://localhost:8081/intersection
+curl -X POST -H "Content-Type: application/json" -d '{"array1": [1, 2, 3, 4], "array2": [3, 4, 5, 6]}' http://localhost:8080/intersection
 
 ```
 
@@ -146,6 +148,8 @@ To start all services using Docker Compose, run:
 ```sh
 docker-compose up --build
 ```
+This will build and start the .NET and Go microservices, along with the Nginx load balancer.
+
 Open Postman - 
 ```
 POST http://localhost:5005/intersection
@@ -157,7 +161,6 @@ payload -
   "array2": [3, 4, 5, 6, 6, 1, 12, 8]
 }
 ```
-This will build and start the .NET and Go microservices, along with the Nginx load balancer.
 
 ### Configuration
 - __dotnetmicroservice__: Defined in the dotnetmicroservice1 directory.
